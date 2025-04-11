@@ -1,0 +1,11 @@
+.pawn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: absolute;
+  }
+  .red { background: red; }
+  .green { background: green; }
+  .yellow { background: yellow; }
+  .blue { background: blue; }
+  

@@ -1,0 +1,41 @@
+/* src/components/Board.css */
+.board {
+    width: 600px;
+    height: 600px;
+    background-color: lightgray;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    position: relative;
+    margin: auto;
+    border: 5px solid black;
+  }
+  .board > div {
+    border: 1px solid black; /* Grid lines for each cell */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cell {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid #000;
+  }
+  
+  .home {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .red { background: red; top: 0; left: 0; }
+  .green { background: green; top: 0; right: 0; }
+  .yellow { background: yellow; bottom: 0; left: 0; }
+  .blue { background: blue; bottom: 0; right: 0; }
+  
