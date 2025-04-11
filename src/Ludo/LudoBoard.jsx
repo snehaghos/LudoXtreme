@@ -70,12 +70,10 @@ const LudoBoard = () => {
   const [canRoll, setCanRoll] = useState(true);
 
 
-    // Function to move a piece
     const movePiece = (color, pieceIndex, steps) => {
       const pathConfig = ludoPaths[color];
       const piece = pieces[color][pieceIndex];
       
-      // If piece is at home and dice is 6, move to starting point
       if (piece.isHome && diceValue === 6) {
         setPieces(prev => ({
           ...prev,
@@ -86,15 +84,12 @@ const LudoBoard = () => {
         return;
       }
   
-      // If piece is not on board, can't move
       if (piece.isHome) return;
   
-      // Find current position in path
       const currentIndex = pathConfig.path.findIndex(pos => 
         pos[0] === piece.position[0] && pos[1] === piece.position[1]
       );
   
-      // Calculate new position
       if (currentIndex >= 0) {
         const newIndex = Math.min(currentIndex + steps, pathConfig.path.length - 1);
         const newPosition = pathConfig.path[newIndex];
@@ -108,14 +103,12 @@ const LudoBoard = () => {
       }
     };
   
-    // Handle dice roll
     const handleDiceRoll = (value) => {
       if (!canRoll) return;
       setDiceValue(value);
       setCanRoll(false);
       
-      // Here you would add logic to determine which piece to move
-      // For now, we'll just move the first available piece
+    
       const availablePieces = pieces[currentPlayer].filter(p => 
         !p.isHome || (p.isHome && value === 6)
       );
@@ -124,7 +117,6 @@ const LudoBoard = () => {
         movePiece(currentPlayer, 0, value);
       }
       
-      // Switch player after move
       setTimeout(() => {
         const players = ['red', 'green', 'blue', 'yellow'];
         const currentIndex = players.indexOf(currentPlayer);
@@ -170,14 +162,12 @@ const LudoBoard = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="relative grid grid-cols-15 grid-rows-15 w-full max-w-[600px] h-[600px] bg-white shadow-lg">
         
-        {/* Escape Paths */}
         <div className="col-start-2 col-end-7 row-start-8 row-end-9 bg-red-500 border border-black z-10"></div>
         <div className="col-start-10 col-end-15 row-start-8 row-end-9 bg-yellow-500 border border-black z-10"></div>
         <div className="col-start-8 col-end-9 row-start-2 row-end-7 bg-green-500 border border-black z-10"></div>
         <div className="col-start-8 col-end-9 row-start-10 row-end-15 bg-blue-500 border border-black z-10"></div>
 
 
-        {/* safe areas */}
         <div className="col-start-3 row-start-9 bg-blue-500 borde z-10"></div>
         <div className="col-start-7 row-start-3 bg-red-500 border z-10"></div>
         <div className="col-start-13 row-start-7  bg-green-500 border  z-10"></div>
@@ -188,8 +178,8 @@ const LudoBoard = () => {
 
 <div className="absolute inset-0 grid grid-cols-15 grid-rows-15 pointer-events-none">
   {[...Array(15 * 15)].map((_, index) => {
-    const row = Math.floor(index / 15) + 1; // Calculate row index (1-based)
-    const col = (index % 15) + 1; // Calculate column index (1-based)
+    const row = Math.floor(index / 15) + 1; 
+    const col = (index % 15) + 1; 
     return (
       <div
         key={`cell-${index}`}
@@ -212,10 +202,8 @@ const LudoBoard = () => {
           </div>
         </div>
 
-        {/* Red Starting Position */}
         <div className="col-start-2 row-start-7 bg-red-500 border border-black z-10"></div>
 
-        {/* Green Home Area */}
         <div className="col-start-10 col-span-6 row-span-6 bg-green-500 border-2 border-black flex justify-center items-center z-10">
           <div className="grid grid-cols-2 grid-rows-2 gap-3">
             {[...Array(4)].map((_, i) => (
@@ -226,10 +214,8 @@ const LudoBoard = () => {
           </div>
         </div>
 
-        {/* Green Starting Position */}
         <div className="col-start-9 row-start-2 bg-green-500 border border-black z-10"></div>
 
-        {/* Blue Home Area */}
         <div className="row-start-10 row-span-6 col-span-6 bg-blue-500 border-2 border-black flex justify-center items-center z-10">
           <div className="grid grid-cols-2 grid-rows-2 gap-3">
             {[...Array(4)].map((_, i) => (
@@ -240,10 +226,8 @@ const LudoBoard = () => {
           </div>
         </div>
 
-        {/* Blue Starting Position */}
         <div className="col-start-7 row-start-14 bg-blue-500 border border-black z-10"></div>
 
-        {/* Yellow Home Area */}
         <div className="row-start-10 col-start-10 row-span-6 col-span-6 bg-yellow-500 border-2 border-black flex justify-center items-center z-10">
           <div className="grid grid-cols-2 grid-rows-2 gap-3">
             {[...Array(4)].map((_, i) => (
@@ -254,10 +238,8 @@ const LudoBoard = () => {
           </div>
         </div>
 
-        {/* Yellow Starting Position */}
         <div className="col-start-14 row-start-9 bg-yellow-500 border border-black z-10"></div>
 {renderPieces()}
-        {/* Center Area (3x3) */}
         <div className="col-start-7 col-span-3 row-start-7 row-span-3 grid grid-cols-3 grid-rows-3 border-2 border-black z-10">
           <div className="bg-blue-500" />
           <div className="bg-green-500" />
