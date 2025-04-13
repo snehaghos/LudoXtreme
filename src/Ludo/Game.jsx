@@ -120,36 +120,58 @@ const Game = () => {
   const handleMove = (color, value) => {
     if (!selectedPiece) return;
   
-    const playerPieces = pieces[color];
     const path = playerPaths[color];
-    const newPieces = [...playerPieces];
-    const piece = newPieces[selectedPiece.index];
+    const newPieces = { ...pieces };
+    const currentPiece = newPieces[color][selectedPiece.index];
     let moved = false;
   
-    if (piece.isHome && value === 6) {
-      piece.position = startingPoints[color];
-      piece.pathIndex = 0;
-      piece.isHome = false;
+    if (currentPiece.isHome && value === 6) {
+      currentPiece.position = startingPoints[color];
+      currentPiece.pathIndex = 0;
+      currentPiece.isHome = false;
       moved = true;
-    }
-    else if (!piece.isHome && piece.pathIndex !== -1) {
-      const nextIndex = piece.pathIndex + value;
+    } else if (!currentPiece.isHome && currentPiece.pathIndex !== -1) {
+      const nextIndex = currentPiece.pathIndex + value;
       if (nextIndex < path.length) {
-        piece.pathIndex = nextIndex;
-        piece.position = path[nextIndex];
+        const nextPosition = path[nextIndex];
+  
+        // ✅ Check for captures excluding opponent's starting points (pathIndex === 0)
+        for (const [opponentColor, opponentPieces] of Object.entries(newPieces)) {
+          if (opponentColor === color) continue;
+  
+          opponentPieces.forEach((opponentPiece, oppIndex) => {
+            if (
+              !opponentPiece.isHome &&
+              opponentPiece.pathIndex !== 0 && // 🔒 prevent capture at starting point
+              opponentPiece.position &&
+              opponentPiece.position[0] === nextPosition[0] &&
+              opponentPiece.position[1] === nextPosition[1]
+            ) {
+              // Send opponent piece home
+              newPieces[opponentColor][oppIndex] = {
+                position: null,
+                pathIndex: -1,
+                isHome: true,
+              };
+            }
+          });
+        }
+  
+        currentPiece.pathIndex = nextIndex;
+        currentPiece.position = nextPosition;
         moved = true;
       }
     }
   
     if (moved) {
-      setPieces(prev => ({ ...prev, [color]: newPieces }));
+      setPieces(newPieces);
   
       if (value !== 6) {
         const next = getNextPlayer(color);
         setCurrentPlayer(next);
         setDiceValue(null);
       } else {
-        setDiceValue(null);
+        setDiceValue(null); // Allow extra turn
       }
     } else {
       const next = getNextPlayer(color);
@@ -160,6 +182,8 @@ const Game = () => {
     setSelectedPiece(null);
     setMovablePieces([]);
   };
+  
+  
 
 
   const getNextPlayer = (color) => {
