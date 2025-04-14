@@ -143,7 +143,7 @@ const Game = () => {
       setCurrentPlayer(next);
     }
   
-    // Reset diceValue after the move
+   
     setDiceValue(null);
   
     setSelectedPiece(null);
