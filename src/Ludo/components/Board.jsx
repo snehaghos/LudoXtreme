@@ -74,7 +74,7 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
           gridRow: point[0] + 1,
         }}
       >
-        <span className="text-4xl flex justify-center items-center text-yellow-500 font-bold">★</span>
+        <span className="text-4xl flex justify-center items-center text-yellow-500 font-bold">*</span>
       </div>
     ));
   };
