@@ -1,61 +1,8 @@
 import React, { useState } from "react";
-import redPiece from "/images/redpiece.png";
-import greenPiece from "/images/greenpiece.png";
-import yellowPiece from "/images/yellowpiece.png";
-import bluePiece from "/images/bluepiece.png";
 import Board from "./components/Board";
-
-const pieceImages = {
-  red: redPiece,
-  green: greenPiece,
-  yellow: yellowPiece,
-  blue: bluePiece,
-};
-
-const homePositions = {
-  red: [[1, 1], [1, 2], [2, 1], [2, 2]],
-  green: [[1, 13], [1, 14], [2, 13], [2, 14]],
-  yellow: [[13, 13], [13, 14], [14, 13], [14, 14]],
-  blue: [[13, 1], [13, 2], [14, 1], [14, 2]],
-};
-
-const playerPaths = {
-  red: [
-    [6, 0], [6, 1], [6, 2], [6, 3], [6, 4],[6,5], [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [0, 6],
-    [0, 7], [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [6, 9], [6, 10], [6, 11], [6, 12], [6, 13],
-    [6, 14], [7, 14], [8, 14], [8, 13], [8, 12], [8, 11], [8, 10], [9, 8], [10, 8], [11, 8],
-    [12, 8], [13, 8], [14, 8], [14, 7], [14, 6], [13, 6], [12, 6], [11, 6], [10, 6], [8, 5],
-    [8, 4], [8, 3], [8, 2], [8, 1], [8, 0], [7, 0], [6, 0],
-  ],
-  green: [
-    [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14],
-    [7, 14], [8, 14], [8, 13], [8, 12], [8, 11], [8, 10], [9, 8], [10, 8], [11, 8], [12, 8],
-    [13, 8], [14, 8], [14, 7], [14, 6], [13, 6], [12, 6], [11, 6], [10, 6], [8, 5], [8, 4],
-    [8, 3], [8, 2], [8, 1], [8, 0], [7, 0], [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [5, 6],
-    [4, 6], [3, 6], [2, 6], [1, 6], [0, 6], [0, 7], [0, 8],
-  ],
-  yellow: [
-    [8, 14], [8, 13], [8, 12], [8, 11], [8, 10], [9, 8], [10, 8], [11, 8], [12, 8], [13, 8],
-    [14, 8], [14, 7], [14, 6], [13, 6], [12, 6], [11, 6], [10, 6], [8, 5], [8, 4], [8, 3],
-    [8, 2], [8, 1], [8, 0], [7, 0], [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [5, 6], [4, 6],
-    [3, 6], [2, 6], [1, 6], [0, 6], [0, 7], [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [6, 9],
-    [6, 10], [6, 11], [6, 12], [6, 13], [6, 14], [7, 14], [8, 14],
-  ],
-  blue: [
-    [14, 6], [13, 6], [12, 6], [11, 6], [10, 6], [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
-    [7, 0], [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [5, 6], [4, 6], [3, 6], [2, 6], [1, 6],
-    [0, 6], [0, 7], [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [6, 9], [6, 10], [6, 11], [6, 12],
-    [6, 13], [6, 14], [7, 14], [8, 14], [8, 13], [8, 12], [8, 11], [8, 10], [9, 8], [10, 8],
-    [11, 8], [12, 8], [13, 8], [14, 8], [14, 7], [14, 6],
-  ],
-};
-
-const startingPoints = {
-  red: [6, 1],
-  green: [1, 8],
-  yellow: [8, 13],
-  blue: [13, 6],
-};
+import { pieceImages, homePositions, playerPaths, startingPoints, safePoints, escapePaths } from "./components/constants";
+import Maindice from "./components/maindice";
+import { getNextPlayer } from "./components/helper";
 
 const Game = () => {
   const [diceValue, setDiceValue] = useState(null);
@@ -72,11 +19,10 @@ const Game = () => {
   const rollDice = () => {
     const value = Math.floor(Math.random() * 6) + 1;
     setDiceValue(value);
-    setSelectedPiece(null); 
- 
+    setSelectedPiece(null);
     calculateMovablePieces(currentPlayer, value);
-    
-    const movable = pieces[currentPlayer].some((piece, index) => {
+  
+    const movable = pieces[currentPlayer].some((piece) => {
       if (value === 6 && piece.isHome) return true;
       if (!piece.isHome) {
         const nextIndex = piece.pathIndex + value;
@@ -84,12 +30,13 @@ const Game = () => {
       }
       return false;
     });
-    
+  
     if (!movable && value !== 6) {
-      const next = getNextPlayer(currentPlayer);
+      const next = getNextPlayer(currentPlayer); 
       setCurrentPlayer(next);
     }
   };
+
   const calculateMovablePieces = (color, diceValue) => {
     const playerPieces = pieces[color];
     const movable = [];
@@ -116,11 +63,11 @@ const Game = () => {
     setMovablePieces(movable);
   };
 
-
   const handleMove = (color, value) => {
     if (!selectedPiece) return;
   
     const path = playerPaths[color];
+    const escape = escapePaths[color];
     const newPieces = { ...pieces };
     const currentPiece = newPieces[color][selectedPiece.index];
     let moved = false;
@@ -132,29 +79,44 @@ const Game = () => {
       moved = true;
     } else if (!currentPiece.isHome && currentPiece.pathIndex !== -1) {
       const nextIndex = currentPiece.pathIndex + value;
-      if (nextIndex < path.length) {
+  
+      if (nextIndex >= path.length) {
+        const escapeIndex = nextIndex - path.length;
+        if (escapeIndex < escape.length) {
+          const nextPosition = escape[escapeIndex];
+          currentPiece.pathIndex = path.length + escapeIndex;
+          currentPiece.position = nextPosition;
+          moved = true;
+        } else if (escapeIndex === escape.length) {
+          currentPiece.position = null;
+          currentPiece.pathIndex = -2;
+          moved = true;
+        }
+      } else {
         const nextPosition = path[nextIndex];
+        const isSafe = safePoints.some(
+          (point) => point[0] === nextPosition[0] && point[1] === nextPosition[1]
+        );
   
-        // ✅ Check for captures excluding opponent's starting points (pathIndex === 0)
-        for (const [opponentColor, opponentPieces] of Object.entries(newPieces)) {
-          if (opponentColor === color) continue;
-  
-          opponentPieces.forEach((opponentPiece, oppIndex) => {
-            if (
-              !opponentPiece.isHome &&
-              opponentPiece.pathIndex !== 0 && // 🔒 prevent capture at starting point
-              opponentPiece.position &&
-              opponentPiece.position[0] === nextPosition[0] &&
-              opponentPiece.position[1] === nextPosition[1]
-            ) {
-              // Send opponent piece home
-              newPieces[opponentColor][oppIndex] = {
-                position: null,
-                pathIndex: -1,
-                isHome: true,
-              };
-            }
-          });
+        if (!isSafe) {
+          for (const [opponentColor, opponentPieces] of Object.entries(newPieces)) {
+            if (opponentColor === color) continue;
+            opponentPieces.forEach((opponentPiece, oppIndex) => {
+              if (
+                !opponentPiece.isHome &&
+                opponentPiece.pathIndex >= 0 &&
+                opponentPiece.position &&
+                opponentPiece.position[0] === nextPosition[0] &&
+                opponentPiece.position[1] === nextPosition[1]
+              ) {
+                newPieces[opponentColor][oppIndex] = {
+                  position: null,
+                  pathIndex: -1,
+                  isHome: true,
+                };
+              }
+            });
+          }
         }
   
         currentPiece.pathIndex = nextIndex;
@@ -166,102 +128,57 @@ const Game = () => {
     if (moved) {
       setPieces(newPieces);
   
+      const allWon = newPieces[color].every((p) => p.pathIndex === -2);
+      if (allWon) {
+        alert(`${color.toUpperCase()} wins the game!`);
+        return;
+      }
+  
       if (value !== 6) {
         const next = getNextPlayer(color);
         setCurrentPlayer(next);
-        setDiceValue(null);
-      } else {
-        setDiceValue(null); // Allow extra turn
       }
     } else {
       const next = getNextPlayer(color);
       setCurrentPlayer(next);
-      setDiceValue(null);
     }
+  
+    // Reset diceValue after the move
+    setDiceValue(null);
   
     setSelectedPiece(null);
     setMovablePieces([]);
   };
-  
-  
-
-
-  const getNextPlayer = (color) => {
-    const order = ["red", "green", "yellow", "blue"];
-    const currentIndex = order.indexOf(color);
-    return order[(currentIndex + 1) % order.length];
-  };
-
-  const renderPieces = () => {
-    return Object.entries(pieces).flatMap(([color, playerPieces]) =>
-      playerPieces.map((piece, index) => {
-        const isSelected = selectedPiece?.color === color && selectedPiece?.index === index;
-        const isMovable = movablePieces.some(
-          p => p.color === color && p.index === index
-        );
-
-        const pieceStyles = {
-          gridColumn: piece.isHome ? homePositions[color][index][1] : piece.position[1] + 1,
-          gridRow: piece.isHome ? homePositions[color][index][0] : piece.position[0] + 1,
-          borderColor: color,
-          transform: isSelected ? "scale(1.1)" : "scale(1)",
-          boxShadow: isMovable ? "0 0 10px 2px rgba(255, 255, 0, 0.8)" : "none",
-          cursor: isMovable ? "pointer" : "default",
-          transition: "all 0.2s ease",
-        };
-
-        return (
-          <div
-            key={`${color}-${index}`}
-            className="absolute w-10 h-10 z-20 border-2 rounded-full"
-            style={pieceStyles}
-            onClick={() => handlePieceClick(color, index)}
-          >
-            <img
-              src={pieceImages[color]}
-              alt={`${color} piece`}
-              className="w-full h-full object-contain"
-            />
-          </div>
-        );
-      })
-    );
-  };
-
 
   const handlePieceClick = (color, index) => {
-    // allow current player to select pieces
     if (color !== currentPlayer || !diceValue) return;
 
-    // if the piece is movable
     const isMovable = movablePieces.some(
-      piece => piece.color === color && piece.index === index
+      (piece) => piece.color === color && piece.index === index
     );
 
     if (isMovable) {
       setSelectedPiece({ color, index });
-      //  updates before handleMove
       setTimeout(() => handleMove(color, diceValue), 0);
     }
   };
+
   return (
     <div className="flex flex-col items-center gap-4 mt-6">
-      <Board renderPieces={renderPieces} />
-
-      <div className="text-center space-y-2">
-        <button
-          onClick={rollDice}
-          className={`px-4 py-2 rounded-md ${diceValue && movablePieces.length > 0
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 text-white"
-            }`}
-          disabled={diceValue && movablePieces.length > 0}
-        >
-          {diceValue && movablePieces.length > 0 ? "Select a piece" : "Roll Dice"}
-        </button>
-        <p>Dice Value: {diceValue}</p>
-        <p>Current Player: <span className="capitalize">{currentPlayer}</span></p>
-      </div>
+      <Board
+        pieces={pieces}
+        selectedPiece={selectedPiece}
+        pieceImages={pieceImages}
+        movablePieces={movablePieces}
+        handlePieceClick={handlePieceClick}
+      />
+    <Maindice
+  rollDice={rollDice}
+  diceValue={diceValue}
+  currentPlayer={currentPlayer}
+  movablePieces={movablePieces}
+  
+/>
     </div>
   );
 };
