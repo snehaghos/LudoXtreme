@@ -91,10 +91,10 @@ export const homePositions = {
   };
   
   export const startingPoints = {
-    red: [6, 1],
-    green: [1, 8],
-    yellow: [8, 13],
-    blue: [13, 6],
+    red: [[6, 1]],
+    green: [[1, 8]],
+    yellow: [[8, 13]],
+    blue: [[13, 6]],
   };
   
   export const safePoints = [
@@ -104,4 +104,8 @@ export const homePositions = {
     [8, 2],
   ];
   
-
+export const skipPoints = [
+    [6,6],[6, 7],[6, 8],
+    [7, 6],[7, 7],[7, 8],
+    [8, 6],[8, 7],[8, 8],
+  ];
