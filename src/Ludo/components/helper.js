@@ -3,3 +3,4 @@ export const getNextPlayer = (color) => {
     const currentIndex = order.indexOf(color);
     return order[(currentIndex + 1) % order.length];
   };
+  //hrllo
