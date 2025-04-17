@@ -72,8 +72,9 @@ const Game = () => {
     const currentPiece = newPieces[color][selectedPiece.index];
     let moved = false;
   
+    
     if (currentPiece.isHome && value === 6) {
-      currentPiece.position = startingPoints[color];
+      currentPiece.position = startingPoints[color][0]; 
       currentPiece.pathIndex = 0;
       currentPiece.isHome = false;
       moved = true;
@@ -143,9 +144,7 @@ const Game = () => {
       setCurrentPlayer(next);
     }
   
-   
     setDiceValue(null);
-  
     setSelectedPiece(null);
     setMovablePieces([]);
   };
