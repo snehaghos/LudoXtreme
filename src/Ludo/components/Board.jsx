@@ -8,31 +8,46 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
     return [...Array(15 * 15)].map((_, index) => {
       const row = Math.floor(index / 15);
       const col = index % 15;
-
+  
       const isRedHome = row < 6 && col < 6;
       const isGreenHome = row < 6 && col > 8;
       const isYellowHome = row > 8 && col > 8;
       const isBlueHome = row > 8 && col < 6;
-
+  
       let bgColor = "bg-white";
-
+      let zIndex = "z-0"; 
+      let borderClass = "border border-gray-300"; 
+  
+      if (isRedHome) {
+        bgColor = "bg-red-500";
+        zIndex = "z-10"; 
+        borderClass = ""; 
+      } else if (isGreenHome) {
+        bgColor = "bg-green-600";
+        zIndex = "z-10"; 
+        borderClass = ""; 
+      } else if (isYellowHome) {
+        bgColor = "bg-yellow-500";
+        zIndex = "z-10"; 
+        borderClass = "";
+      } else if (isBlueHome) {
+        bgColor = "bg-blue-600";
+        zIndex = "z-10"; 
+        borderClass = ""; 
+      }
+  
       const isEscapePath = Object.values(escapePaths).some(path =>
         path.some(([r, c]) => r === row && c === col)
       );
       const isSkipPoint = skipPoints.some(([r, c]) => r === row && c === col);
-
+  
       if (isEscapePath) bgColor = "bg-gray-400";
       if (isSkipPoint) bgColor = "bg-purple-200";
-
-      if (isRedHome) bgColor = "bg-red-200";
-      else if (isGreenHome) bgColor = "bg-green-200";
-      else if (isYellowHome) bgColor = "bg-yellow-200";
-      else if (isBlueHome) bgColor = "bg-blue-200";
-
+  
       return (
         <div
           key={`cell-${index}`}
-          className={`relative flex items-center justify-center border border-gray-300 text-xs text-white ${bgColor}`}
+          className={`relative flex items-center justify-center text-xs text-white ${bgColor} ${zIndex} ${borderClass}`}
         >
           {/* {`(${row}, ${col})`} */}
         </div>
@@ -61,7 +76,7 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
         return (
           <div
             key={`${color}-${index}`}
-            className="absolute w-10 h-10 z-20 border-2 rounded-full"
+            className="absolute w-10 h-10 z-20 border-2 bg-slate-100 rounded-full"
             style={pieceStyles}
             onClick={() => handlePieceClick(color, index)}
           >
@@ -113,7 +128,7 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
   };
 
   return (
-    <div className="relative grid grid-cols-15 grid-rows-15 w-[600px] h-[600px] border-2 border-gray-500 gap-0 p-2 rounded-2xl">
+    <div className="relative grid grid-cols-15 grid-rows-15 w-[600px] h-[600px] border-2 border-gray-500 gap-0 p-2 ">
       {renderGrid()}
       {renderPieces()}
       {renderSafePoints()}
