@@ -62,7 +62,7 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
         const isMovable = movablePieces.some(
           (p) => p.color === color && p.index === index
         );
-
+  
         const pieceStyles = {
           gridColumn: piece.isHome ? homePositions[color][index][1] + 1 : piece.position?.[1] + 1,
           gridRow: piece.isHome ? homePositions[color][index][0] + 1 : piece.position?.[0] + 1,
@@ -72,19 +72,27 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
           cursor: isMovable ? "pointer" : "default",
           transition: "all 0.2s ease",
         };
-
+  
         return (
           <div
             key={`${color}-${index}`}
-            className="absolute w-10 h-10 z-20 border-2 bg-slate-100 rounded-full"
-            style={pieceStyles}
-            onClick={() => handlePieceClick(color, index)}
+            className="absolute w-10 h-10 z-10  flex items-center justify-center"
+            style={{
+              gridColumn: pieceStyles.gridColumn,
+              gridRow: pieceStyles.gridRow,
+            }}
           >
-            <img
-              src={pieceImages[color]}
-              alt={`${color} piece`}
-              className="w-full h-full object-contain"
-            />
+            <div
+              className="absolute w-10 h-10 z-20 border-2 bg-slate-100 rounded-full"
+              style={pieceStyles}
+              onClick={() => handlePieceClick(color, index)}
+            >
+              <img
+                src={pieceImages[color]}
+                alt={`${color} piece`}
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
         );
       })
@@ -113,7 +121,7 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
       points.map(([row, col], index) => (
         <div
           key={`start-${color}-${index}`}
-          className="absolute flex items-center justify-center z-10"
+          className={`absolute flex items-center justify-center   `}
           style={{
             gridColumn: col + 1,
             gridRow: row + 1,

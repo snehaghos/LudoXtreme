@@ -131,11 +131,11 @@ const Game = () => {
   
       const allWon = newPieces[color].every((p) => p.pathIndex === -2);
       if (allWon) {
-        alert(`${color.toUpperCase()} wins the game!`);
+        alert(`${color()} wins the game!`);
         return;
       }
   
-      if (value !== 6) {
+      if (value !== 6 ) {
         const next = getNextPlayer(color);
         setCurrentPlayer(next);
       }
