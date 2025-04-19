@@ -49,7 +49,7 @@ const Board = ({ pieces, pieceImages, selectedPiece, movablePieces, handlePieceC
           key={`cell-${index}`}
           className={`relative flex items-center justify-center text-xs text-white ${bgColor} ${zIndex} ${borderClass}`}
         >
-          {/* {`(${row}, ${col})`} */}
+          {`(${row}, ${col})`}
         </div>
       );
     });

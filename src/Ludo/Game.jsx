@@ -18,6 +18,7 @@ const Game = () => {
 
   const rollDice = () => {
     const value = Math.floor(Math.random() * 6) + 1;
+    console.log(`Rolled Dice: ${value}, Current Player: ${currentPlayer}`);
     setDiceValue(value);
     setSelectedPiece(null);
     calculateMovablePieces(currentPlayer, value);
@@ -32,7 +33,8 @@ const Game = () => {
     });
   
     if (!movable && value !== 6) {
-      const next = getNextPlayer(currentPlayer); 
+      const next = getNextPlayer(currentPlayer);
+      console.log(`No moves available. Switching to next player: ${next}`);
       setCurrentPlayer(next);
     }
   };
